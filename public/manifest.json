@@ -1,0 +1,21 @@
+{
+  "short_name": "Pasteruf",
+  "name": "Pasteruf",
+  "description": "Pasteruf - Simple Pastebin Service.",
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0ea5a4",
+  "background_color": "#ffffff",
+  "prefer_related_applications": false,
+  "related_applications": []
+}

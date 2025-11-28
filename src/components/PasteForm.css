@@ -1,0 +1,221 @@
+.paste-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+.paste-box {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    min-height: 160px;
+    box-sizing: border-box;
+    resize: vertical;
+    background: #fff;
+    color: #111;
+    transition: box-shadow .12s ease, border-color .12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.paste-box::placeholder {
+    color: #9aa3ae;
+}
+
+.paste-box:focus {
+    outline: none;
+    border-color: #313647;
+    box-shadow: 0 4px 18px rgba(75, 159, 255, 0.12);
+}
+
+.url-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    color: #222;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.url-checkbox input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #313647;
+}
+
+.submit-btn {
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: center;
+    background: #313647;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(3, 102, 214, 0.14);
+    transition: transform .06s ease, box-shadow .12s ease, opacity .12s ease;
+    margin-top: 12px;
+}
+
+.submit-btn:hover {
+    background-color: #1c202d;
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:focus {
+    outline: 3px solid rgba(75, 159, 255, 0.18);
+}
+
+.submit-btn:disabled {
+    background: #4e6370;
+    cursor: default;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+@media (max-width: 520px) {
+    .paste-box {
+        min-height: 120px;
+        padding: 10px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        align-self: stretch;
+    }
+}
+
+/* Expiration control layout */
+.expiration-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    width: fit-content;
+    margin: 0 auto;
+    /* center horizontally */
+}
+
+.expiration-input .expiration-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+}
+
+.expiration-number,
+.expiration-input .expiration-unit {
+    height: 36px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    background: #fff;
+    color: #111;
+}
+
+.expiration-number:disabled,
+.expiration-unit:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+    color: #999;
+}
+
+.expiration-input .expiration-number {
+    width: 80px;
+}
+
+.expiration-input .expiration-unit {
+    min-width: 92px;
+}
+
+.paste-form .error-message {
+    color: crimson;
+    text-align: center;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.loader {
+    text-align: center;
+    font-size: 13px;
+    color: #334155;
+    padding: 8px 12px;
+    background: rgba(49, 54, 71, 0.04);
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+.card {
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 12px;
+    box-shadow: 0 6px 18px rgba(3, 102, 214, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-body h3 {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+}
+
+.card-body p {
+    margin: 0;
+    font-size: 13px;
+    color: #1f2937;
+}
+
+.card-actions button {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.success-card {
+    background: linear-gradient(180deg, rgba(236, 252, 239, 0.9), rgba(236, 252, 239, 0.6));
+    border: 1px solid #d1fae5;
+}
+
+.error-card {
+    background: linear-gradient(180deg, rgba(255, 243, 244, 0.95), rgba(255, 243, 244, 0.8));
+    border: 1px solid #fecaca;
+}
+
+@media (max-width: 520px) {
+    .card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
