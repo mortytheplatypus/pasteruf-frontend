@@ -74,3 +74,40 @@
     66%  {background-position: 0%  0%,50%   0%,100%  50%}
     100% {background-position: 0%  0%,50%   0%,100%   0%}
 }
+
+@media (max-width: 600px) {
+
+    .paste-view-container {
+        min-width: 100%;
+        padding: 0 12px;
+        font-size: 11px;
+    }
+
+    .paste-content {
+        height: 300px;
+        padding: 14px;
+        font-size: 11px;
+    }
+
+    .paste-view-footer {
+        margin-top: 8px;
+    }
+
+    .new-paste-button {
+        width: 100%;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .loader-container {
+        height: 300px;
+    }
+
+    .loader-container h3 {
+        font-size: 16px;
+    }
+
+    .content-loader {
+        width: 35px;
+    }
+}
