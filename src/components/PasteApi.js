@@ -1,6 +1,8 @@
 // Exports: createPaste({ content, is_url }) -> Promise<responseJson>
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:5000/api';
+const AUTH_USERNAME = process.env.REACT_APP_AUTH_USERNAME ?? '';
+const AUTH_PASSWORD = process.env.REACT_APP_AUTH_PASSWORD ?? '';
 
 async function createPaste({ content, is_url, expiration } = {}) {
 
@@ -11,6 +13,7 @@ async function createPaste({ content, is_url, expiration } = {}) {
 		headers: {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
+			'Authorization': 'Basic ' + btoa(`${AUTH_USERNAME}:${AUTH_PASSWORD}`)
 		},
 		body: JSON.stringify(body),
 	});
@@ -42,14 +45,4 @@ async function createPaste({ content, is_url, expiration } = {}) {
 	};
 }
 
-// get paste by shortlink
-async function getPaste(shortlink) {	
-	const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(shortlink)}`, {
-		method: 'GET',
-		headers: { Accept: 'application/json, text/plain, */*' },
-	});
-
-	return response;
-}
-
-export { createPaste, getPaste };
+export { createPaste };
