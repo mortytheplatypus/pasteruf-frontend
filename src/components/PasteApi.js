@@ -29,19 +29,15 @@ async function createPaste({ content, is_url, expiration } = {}) {
 
 	// success expected to be 201 Created
 	if (response.status === 201) {
-		const shortlink = parsed?.shortlink ?? null;
+		const shortcode = parsed?.shortcode ?? null;
 		return {
 			success: true,
-			message: 'Created',
-			shortlink,
+			shortcode,
 		};
 	}
 
-	// non-success: normalize message
-	const message = (parsed?.message || parsed?.error) ?? parsed ?? `HTTP ${response.status}`;
 	return {
 		success: false,
-		message,
 	};
 }
 

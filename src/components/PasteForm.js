@@ -23,11 +23,13 @@ const  UNIT_MULTIPLIER = {
 function PasteForm() {
   const [text, setText] = useState('');
   const [isUrl, setIsUrl] = useState(false);
-  const [banner, setBanner] = useState({ type: '', shortlink: '', message: '' });
+  const [banner, setBanner] = useState({ type: '', shortcode: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [expirationValue, setExpirationValue] = useState(DEFAULT_EXPIRATION_MINUTES);
   const [expirationUnit, setExpirationUnit] = useState(MINUTES);
   const [errors, setErrors] = useState({ content: '', expiration: '' });
+
+  
 
   const validateContentLength = (content) => {
     if (content.trim() === '') return 'Content cannot be empty';
@@ -78,7 +80,7 @@ function PasteForm() {
 
     if (contentError || expirationError) return;
 
-    setBanner({ type: '', shortlink: '', message: '' });
+    setBanner({ type: '', shortcode: '', message: '' });
 
     setLoading(true);
 
@@ -91,10 +93,10 @@ function PasteForm() {
     try {
       const response = await createPaste(payload);
 
-      const shortlink = response?.shortlink ?? null;
+      const shortcode = response?.shortcode ?? null;
 
-      if (shortlink) {
-        setBanner({ type: 'success', shortlink, message: '' });
+      if (shortcode) {
+        setBanner({ type: 'success', shortcode, message: '' });
 
         // Reset form to defaults on success
         setText('');
@@ -103,11 +105,11 @@ function PasteForm() {
         setExpirationUnit(MINUTES);
         setErrors({ content: '', expiration: '' });
       } else {
-        setBanner({ type: 'error', shortlink: '', message: 'Service currently unavailable' });
+        setBanner({ type: 'error', shortcode: '', message: 'Service currently unavailable' });
       }
     } catch (err) {
       console.error('Create paste failed', err);
-      setBanner({ type: 'error', shortlink: '', message: 'Service currently unavailable' });
+      setBanner({ type: 'error', shortcode: '', message: 'Service currently unavailable' });
     } finally {
       setLoading(false);
     }
@@ -177,12 +179,12 @@ function PasteForm() {
         <div className="card success-card">
           <div className="card-body">
             <h3>Success!</h3>
-            {banner.shortlink && (
-              <p>Shortlink: <a href={`${window.location.origin}/${banner.shortlink}`} target="_blank" rel="noreferrer">{`${window.location.origin}/${banner.shortlink}`}</a></p>
+            {banner.shortcode && (
+              <p>Shortlink: <a href={`${window.location.origin}/${banner.shortcode}`} target="_blank" rel="noreferrer">{`${window.location.origin}/${banner.shortcode}`}</a></p>
             )}
           </div>
           <div className="card-actions">
-            <button onClick={() => setBanner({ type: '', shortlink: '', message: '' })}>Dismiss</button>
+            <button onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}
@@ -194,7 +196,7 @@ function PasteForm() {
             <p>{banner.message ?? 'Service currently unavailable'}</p>
           </div>
           <div className="card-actions">
-            <button onClick={() => setBanner({ type: '', shortlink: '', message: '' })}>Dismiss</button>
+            <button onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}
