@@ -51,7 +51,7 @@ function Content({ shortlink: propShortlink }) {
             setContent(null);
 
 			try {
-				const response = await fetch(`${API_BASE_URL}/pastes/${encodeURIComponent(shortlink)}`, {
+				const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(shortlink)}`, {
 					method: 'GET',
 					headers: { 
 						Accept: 'application/json, text/plain, */*',
