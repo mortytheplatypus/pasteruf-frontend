@@ -48,32 +48,23 @@ function Content({ shortlink: propShortlink }) {
 			// Fetch from backend
 			setLoading(true);
 			setError(null);
-            setContent(null);
+			setContent(null);
 
 			try {
 				const response = await fetch(`${BASE_URL}/${encodeURIComponent(shortlink)}`, {
 					method: 'GET',
+					credentials: 'include',
 					headers: { 
-						Accept: 'application/json, text/plain, */*',
 						'Authorization': 'Basic ' + btoa(`${AUTH_USERNAME}:${AUTH_PASSWORD}`)
 					},
 				});
 
-				const text = await response.text();
-				let parsed = null;
-				try {
-					parsed = text ? JSON.parse(text) : null;
-				} catch (err) {
-					parsed = text;
-				}
-
 				if (cancelled) return;
 
 				if (response.ok) {
-					const pasteContent = parsed?.content ?? null;
-                    setContent(pasteContent);
+					const pasteContent = await response.text();
+					setContent(pasteContent);
 					
-					// Store in localStorage
 					const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
 					existingCache[shortlink] = {
 						content: pasteContent,
@@ -81,11 +72,20 @@ function Content({ shortlink: propShortlink }) {
 					};
 					localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
 				} else {
-					const message = (parsed?.message || parsed?.error) ?? parsed ?? `HTTP ${response.status}`;
-					setError(message);
+					const text = await response.text();
+					let errorMessage = `HTTP ${response.status}`;
+					
+					try {
+						const parsed = JSON.parse(text);
+						errorMessage = parsed.error ?? parsed.message ?? errorMessage;
+					} catch {
+						errorMessage = text ?? errorMessage;
+					}
+					
+					setError(errorMessage);
 				}
 			} catch (err) {
-				if (!cancelled) setError(err.message || String(err));
+				if (!cancelled) setError(err.message ?? String(err));
 			} finally {
 				if (!cancelled) setLoading(false);
 			}
