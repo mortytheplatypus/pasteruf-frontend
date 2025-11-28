@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Content.css';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:5000/api';
+const BASE_URL = process.env.REACT_APP_BASE_URL ?? 'http://localhost:5000/api';
 const AUTH_USERNAME = process.env.REACT_APP_AUTH_USERNAME ?? '';
 const AUTH_PASSWORD = process.env.REACT_APP_AUTH_PASSWORD ?? '';
 
@@ -51,7 +51,7 @@ function Content({ shortlink: propShortlink }) {
             setContent(null);
 
 			try {
-				const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(shortlink)}`, {
+				const response = await fetch(`${BASE_URL}/${encodeURIComponent(shortlink)}`, {
 					method: 'GET',
 					headers: { 
 						Accept: 'application/json, text/plain, */*',
