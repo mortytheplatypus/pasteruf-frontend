@@ -10,7 +10,6 @@ async function createPaste({ content, is_url, expiration } = {}) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Access-Control-Allow-Origin': '*',
 			'Accept': 'application/json',
 		},
 		body: JSON.stringify(body),
