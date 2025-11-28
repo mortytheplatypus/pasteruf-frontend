@@ -163,11 +163,11 @@ function PasteForm() {
         </select>
       </label>
 
+      <button disabled={checkSubmitDisabled || loading} type="submit" className="submit-btn">Submit</button>
+
       {errors.content && <div className="error-message">{errors.content}</div>}
 
       {errors.expiration && <div className="error-message">{errors.expiration}</div>}
-
-      <button disabled={checkSubmitDisabled || loading} type="submit" className="submit-btn">Submit</button>
 
       {loading && (
         <div className="loader">Submitting…</div>

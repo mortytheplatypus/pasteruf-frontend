@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import './Content.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:5000/api';
+const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
+const CACHE_KEY = 'pastebin_cache';
 
 function Content({ shortlink: propShortlink }) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
     const [content, setContent] = useState(null);
 
-	// determine shortlink from prop or location
 	const shortlink = propShortlink || (window.location.pathname || '').replace(/^\//, '');
 
 	useEffect(() => {
@@ -21,17 +22,38 @@ function Content({ shortlink: propShortlink }) {
 		let cancelled = false;
 
 		async function fetchPaste() {
+			// Check localStorage cache
+			const now = Date.now();
+			const cacheData = localStorage.getItem(CACHE_KEY);
+			
+			if (cacheData) {
+				try {
+					const cache = JSON.parse(cacheData);
+					const cached = cache[shortlink];
+					
+					if (cached && now - cached.timestamp < CACHE_DURATION) {
+						setContent(cached.content);
+						setError(null);
+						setLoading(false);
+						return;
+					}
+				} catch (e) {
+					// Invalid cache, continue to fetch
+				}
+			}
+
+			// Fetch from backend
 			setLoading(true);
 			setError(null);
             setContent(null);
 
 			try {
-				const res = await fetch(`${API_BASE_URL}/pastes/${encodeURIComponent(shortlink)}`, {
+				const response = await fetch(`${API_BASE_URL}/pastes/${encodeURIComponent(shortlink)}`, {
 					method: 'GET',
 					headers: { Accept: 'application/json, text/plain, */*' },
 				});
 
-				const text = await res.text();
+				const text = await response.text();
 				let parsed = null;
 				try {
 					parsed = text ? JSON.parse(text) : null;
@@ -41,11 +63,19 @@ function Content({ shortlink: propShortlink }) {
 
 				if (cancelled) return;
 
-				// prefer parsed when available
-				if (res.ok) {
-                    setContent(parsed?.content ?? null);
+				if (response.ok) {
+					const pasteContent = parsed?.content ?? null;
+                    setContent(pasteContent);
+					
+					// Store in localStorage
+					const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
+					existingCache[shortlink] = {
+						content: pasteContent,
+						timestamp: now
+					};
+					localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
 				} else {
-					const message = (parsed?.message || parsed?.error) ?? parsed ?? `HTTP ${res.status}`;
+					const message = (parsed?.message || parsed?.error) ?? parsed ?? `HTTP ${response.status}`;
 					setError(message);
 				}
 			} catch (err) {
@@ -93,7 +123,6 @@ function Content({ shortlink: propShortlink }) {
             </div>
                 </>
 			)}
-
             
 		</div>
 	);

@@ -15,15 +15,13 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     width: 100%;
-    min-height: 160px;
+    height: 300px;
+    overflow-y: auto;
     box-sizing: border-box;
     resize: vertical;
-    background: #fff;
+    background: #f9f9f9;
     color: #111;
     transition: box-shadow .12s ease, border-color .12s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
 }
 
