@@ -98,16 +98,6 @@ function Content({ shortcode: propShortcode }) {
 						setError({code: 404, message: 'Oops! Paste not found or has been expired. Try creating a new one.'});
 						return;
 					}
-
-					const text = await response.text();
-					let errorMessage = `HTTP ${response.status}`;
-					
-					try {
-						const parsed = JSON.parse(text);
-						errorMessage = parsed.error || parsed.message || errorMessage;
-					} catch {
-						errorMessage = text || errorMessage;
-					}
 					
 					setError({ code: response.status, message: "Paste service might be busy. Please try again" });
 				}
