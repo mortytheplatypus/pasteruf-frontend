@@ -1,0 +1,76 @@
+.paste-view-container {
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: #212121;
+    min-width: 900px;
+}
+
+.paste-content {
+    white-space: pre-wrap;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.paste-view-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.new-paste-button {
+    margin-top: 16px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #313647;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.new-paste-button:hover {
+    background-color: #1c202d;
+}
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+    height: 400px;
+}
+
+.loader-container h3 {
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+}
+
+.content-loader {
+    width: 45px;
+    aspect-ratio: 1;
+    --c: no-repeat linear-gradient(#222 calc(50% - 10px),#0000 0 calc(50% + 10px),#222 0);
+    background: 
+    var(--c) 0%   100%,
+    var(--c) 50%  100%,
+    var(--c) 100% 100%;
+    background-size: 20% calc(200% + 20px);
+    animation:l4 1s infinite linear;
+}
+
+@keyframes l4 {
+    33%  {background-position: 0% 50%,50% 100%,100% 100%}
+    50%  {background-position: 0%  0%,50%  50%,100% 100%}
+    66%  {background-position: 0%  0%,50%   0%,100%  50%}
+    100% {background-position: 0%  0%,50%   0%,100%   0%}
+}

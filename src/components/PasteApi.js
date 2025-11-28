@@ -42,5 +42,14 @@ async function createPaste({ content, is_url, expiration } = {}) {
 	};
 }
 
-export { createPaste };
+// get paste by shortlink
+async function getPaste(shortlink) {	
+	const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(shortlink)}`, {
+		method: 'GET',
+		headers: { Accept: 'application/json, text/plain, */*' },
+	});
 
+	return response;
+}
+
+export { createPaste, getPaste };

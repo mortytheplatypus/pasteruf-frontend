@@ -1,5 +1,5 @@
 .App {
-  margin: 32px auto;
+  margin: 0px auto;
   max-width: 980px;
   padding: 20px;
   display: flex;
@@ -30,54 +30,8 @@ body {
 
 /* Page title */
 .App>h1 {
-  margin: 0;
   font-weight: bold;
-  font-size: 1.75rem;
-}
-
-
-.preview {
-  width: 100%;
-  margin: 8px auto 0;
-  text-align: left;
-}
-
-.preview>h2 {
-  margin: 8px 0;
-  font-size: 1rem;
-}
-
-.paste-preview {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
-  background: #fbfdff;
-  border: 1px solid #e6eefc;
-  padding: 12px;
-  border-radius: 8px;
-  white-space: pre-wrap;
-  overflow-x: auto;
-  color: #0b1220;
-}
-
-/* Responsive */
-@media (max-width: 520px) {
-  .App {
-    padding: 12px;
-    margin: 18px 12px;
-  }
-
-  .paste-box {
-    min-height: 120px;
-    padding: 10px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    align-self: stretch;
-  }
-}
-
-/* Small utility */
-.muted {
-  color: #6b7280;
-  font-size: 13px;
+  font-size: 2.5rem;
+  margin: 10px 0;
+  color: #1c202d;
 }
