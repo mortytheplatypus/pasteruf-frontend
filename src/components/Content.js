@@ -8,16 +8,16 @@ const AUTH_PASSWORD = process.env.REACT_APP_AUTH_PASSWORD ?? '';
 const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
 const CACHE_KEY = 'pasteruf_cache';
 
-function Content({ shortlink: propShortlink }) {
+function Content({ shortcode: propShortcode }) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
     const [content, setContent] = useState(null);
 
-	const shortlink = propShortlink || (window.location.pathname || '').replace(/^\//, '');
+	const shortcode = propShortcode || (window.location.pathname || '').replace(/^\//, '');
 
 	useEffect(() => {
-		if (!shortlink) {
-			setError('No shortlink provided');
+		if (!shortcode) {
+			setError('No shortcode provided');
 			setLoading(false);
 			return;
 		}
@@ -32,9 +32,13 @@ function Content({ shortlink: propShortlink }) {
 			if (cacheData) {
 				try {
 					const cache = JSON.parse(cacheData);
-					const cached = cache[shortlink];
+					const cached = cache[shortcode];
 					
 					if (cached && now - cached.timestamp < CACHE_DURATION) {
+						if (cached.type === 'url') {
+							window.location.href = cached.content;
+							return;
+						}
 						setContent(cached.content);
 						setError(null);
 						setLoading(false);
@@ -51,7 +55,7 @@ function Content({ shortlink: propShortlink }) {
 			setContent(null);
 
 			try {
-				const response = await fetch(`${BASE_URL}/${encodeURIComponent(shortlink)}`, {
+				const response = await fetch(`${BASE_URL}/${encodeURIComponent(shortcode)}`, {
 					method: 'GET',
 					credentials: 'include',
 					headers: { 
@@ -62,30 +66,48 @@ function Content({ shortlink: propShortlink }) {
 				if (cancelled) return;
 
 				if (response.ok) {
-					const pasteContent = await response.text();
-					setContent(pasteContent);
+					const data = await response.json();
 					
-					const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
-					existingCache[shortlink] = {
-						content: pasteContent,
-						timestamp: now
-					};
-					localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
+					if (data.type === 'url') {
+						// Store in cache
+						const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
+						existingCache[shortcode] = {
+							type: 'url',
+							content: data.content,
+							timestamp: now
+						};
+						localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
+						
+						// Redirect
+						window.location.href = data.content;
+					} else {
+						// Text content
+						setContent(data.content);
+						
+						// Store in cache
+						const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
+						existingCache[shortcode] = {
+							type: 'text',
+							content: data.content,
+							timestamp: now
+						};
+						localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
+					}
 				} else {
 					const text = await response.text();
 					let errorMessage = `HTTP ${response.status}`;
 					
 					try {
 						const parsed = JSON.parse(text);
-						errorMessage = parsed.error ?? parsed.message ?? errorMessage;
+						errorMessage = parsed.error || parsed.message || errorMessage;
 					} catch {
-						errorMessage = text ?? errorMessage;
+						errorMessage = text || errorMessage;
 					}
 					
 					setError(errorMessage);
 				}
 			} catch (err) {
-				if (!cancelled) setError(err.message ?? String(err));
+				if (!cancelled) setError(err.message || String(err));
 			} finally {
 				if (!cancelled) setLoading(false);
 			}
@@ -96,7 +118,7 @@ function Content({ shortlink: propShortlink }) {
 		return () => {
 			cancelled = true;
 		};
-	}, [shortlink]);
+	}, [shortcode]);
 
 	function handleCreateNew() {
 		window.location.href = '/';
