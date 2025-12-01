@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './PasteForm.css';
 import { createPaste } from './PasteApi';
+import Copy from './Copy';
 
 const MAX_CONTENT_BYTES = 512 * 1024; // 512 kB
 
@@ -184,7 +185,8 @@ function PasteForm() {
             )}
           </div>
           <div className="card-actions">
-            <button onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <Copy copyText={`${window.location.origin}/${banner.shortcode}`} />
+            <button className='button-dismiss' onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}
@@ -196,7 +198,7 @@ function PasteForm() {
             <p>{banner.message ?? 'Service currently unavailable'}</p>
           </div>
           <div className="card-actions">
-            <button onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <button className='button-dismiss' onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}

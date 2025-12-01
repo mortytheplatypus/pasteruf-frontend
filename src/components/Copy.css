@@ -1,0 +1,11 @@
+.copy-btn {
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: bold;
+    color: black;
+}
+
+.copy-btn:hover {
+    cursor: pointer;
+    background-color: rgb(224, 252, 233);
+}

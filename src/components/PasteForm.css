@@ -173,6 +173,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: inherit;
 }
 
 .card-body h3 {
@@ -186,13 +187,29 @@
     color: #1f2937;
 }
 
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .card-actions button {
     background: transparent;
     border: 1px solid rgba(0, 0, 0, 0.08);
     padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 600;
+    font: inherit;
+    font-size: 14px;
+}
+
+.button-dismiss {
+    font-weight: 500;
+    color: crimson;
+}
+
+.button-dismiss:hover {
+    background-color: #f5ecec;
 }
 
 .success-card {
