@@ -27,9 +27,9 @@
 .new-paste-button {
     padding: 8px 12px;
     border-radius: 6px;
-    background-color: #313647;
-    color: #fff;
-    border: none;
+    background-color: #e8ebf7;
+    color: #1c202d;
+    border: 1px solid #1c202d;
     cursor: pointer;
     font: inherit;
     font-size: 14px;
@@ -37,7 +37,7 @@
 }
 
 .new-paste-button:hover {
-    background-color: #1c202d;
+    background-color: #e0e2e8;
 }
 
 .loader-container {
@@ -57,7 +57,7 @@
 }
 
 .error-card {
-    padding: 16px;
+    padding: 20px;
     border-radius: 8px;
     background: #fff3f3;
     border: 1px solid #d70022;
@@ -87,15 +87,20 @@
     justify-content: flex-end;
 }
 
-.error-btn {
-    padding: 6px 12px;
-    border: none;
+.refresh-btn {
+    padding: 8px 12px;
     border-radius: 6px;
-    cursor: pointer;
-    background: #d70022;
+    background-color: #313647;
     color: #fff;
+    border: none;
+    cursor: pointer;
+    font: inherit;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: bold;
+}
+
+.refresh-btn:hover {
+    background: #1c202d;
 }
 
 .error-btn:hover {
@@ -108,6 +113,13 @@
 
 .error-btn.secondary:hover {
     background: #333;
+}
+
+.error-card-message {
+    font: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    color: #7a0015;
 }
 
 .content-loader {

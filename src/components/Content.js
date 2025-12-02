@@ -102,7 +102,7 @@ function Content({ shortcode: propShortcode }) {
 					setError({ code: response.status, message: "Paste service might be busy. Please try again" });
 				}
 			} catch (err) {
-				if (!cancelled) setError({ code: 500, message: err.message || String(err) });
+				if (!cancelled) setError({ code: 500, message: "Paste service might be busy. Please try again" });
 			} finally {
 				if (!cancelled) setLoading(false);
 			}
@@ -131,11 +131,11 @@ function Content({ shortcode: propShortcode }) {
 			{!loading && error && (
 				<div className="error-card">
 					<div className="error-card-body">
-						{error.message}
+						<span className="error-card-message">{error.message}.</span>
 					</div>
 
 					<div className="error-card-actions">
-						{error.code !== 404 && <button className="error-btn" onClick={() => window.location.reload()}>
+						{error.code !== 404 && <button className="refresh-btn" onClick={() => window.location.reload()}>
 							Refresh
 						</button>}
 						<button className="new-paste-button" onClick={handleCreateNew}>
