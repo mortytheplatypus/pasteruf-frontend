@@ -186,19 +186,19 @@ function PasteForm() {
           </div>
           <div className="card-actions">
             <Copy copyText={`${window.location.origin}/${banner.shortcode}`} />
-            <button className='button-dismiss' onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <button type="button" className="button-dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}
 
       {banner.type === 'error' && (
-        <div className="card error-card">
+        <div className="card failure-card">
           <div className="card-body">
             <h3>Apologies!</h3>
-            <p>{banner.message ?? 'Service currently unavailable'}</p>
+            <p>{banner.message || 'Please try again.'}</p>
           </div>
           <div className="card-actions">
-            <button className='button-dismiss' onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <button type="button" className="button-dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
           </div>
         </div>
       )}

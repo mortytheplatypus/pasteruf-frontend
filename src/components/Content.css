@@ -62,9 +62,9 @@
     background: #fff3f3;
     border: 1px solid #d70022;
     color: #7a0015;
-    max-width: 420px;
+    max-width: 100%;
     margin: 12px auto;
-    font-family: sans-serif;
+    font-family: inherit;
 }
 
 .error-card-header {

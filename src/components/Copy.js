@@ -12,7 +12,7 @@ export default function Copy( {copyText = null} ) {
 
     return (
         <div>
-            <button title="Copy" onClick={handleCopy} className="copy-btn">
+            <button type="button" title="Copy" onClick={handleCopy} className="copy-btn">
                 {copied ? <span className="copy-toast">Copied!</span> 
                 : 
                 <img 
