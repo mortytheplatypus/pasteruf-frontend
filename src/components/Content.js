@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './Content.css';
+import Copy from './Copy';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL ?? 'http://localhost:5000/api';
 const AUTH_USERNAME = process.env.REACT_APP_AUTH_USERNAME ?? '';
@@ -10,14 +11,14 @@ const CACHE_KEY = 'pasteruf_cache';
 
 function Content({ shortcode: propShortcode }) {
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState({code: 400, message: ''});
-    const [content, setContent] = useState(null);
+	const [error, setError] = useState({ code: 400, message: '' });
+	const [content, setContent] = useState(null);
 
 	const shortcode = propShortcode || (window.location.pathname || '').replace(/^\//, '');
 
 	useEffect(() => {
 		if (!shortcode) {
-			setError({code: 400, message: 'No shortcode provided'});
+			setError({ code: 400, message: 'No shortcode provided' });
 			setLoading(false);
 			return;
 		}
@@ -28,12 +29,12 @@ function Content({ shortcode: propShortcode }) {
 			// Check localStorage cache
 			const now = Date.now();
 			const cacheData = localStorage.getItem(CACHE_KEY);
-			
+
 			if (cacheData) {
 				try {
 					const cache = JSON.parse(cacheData);
 					const cached = cache[shortcode];
-					
+
 					if (cached && now - cached.timestamp < CACHE_DURATION) {
 						if (cached.type === 'url') {
 							window.location.href = cached.content;
@@ -58,7 +59,7 @@ function Content({ shortcode: propShortcode }) {
 				const response = await fetch(`${BASE_URL}/${encodeURIComponent(shortcode)}`, {
 					method: 'GET',
 					credentials: 'include',
-					headers: { 
+					headers: {
 						'Authorization': 'Basic ' + btoa(`${AUTH_USERNAME}:${AUTH_PASSWORD}`)
 					},
 				});
@@ -67,7 +68,7 @@ function Content({ shortcode: propShortcode }) {
 
 				if (response.ok) {
 					const data = await response.json();
-					
+
 					if (data.type === 'url') {
 						// Store in cache
 						const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
@@ -77,13 +78,13 @@ function Content({ shortcode: propShortcode }) {
 							timestamp: now
 						};
 						localStorage.setItem(CACHE_KEY, JSON.stringify(existingCache));
-						
+
 						// Redirect
 						window.location.href = data.content;
 					} else {
 						// Text content
 						setContent(data.content);
-						
+
 						// Store in cache
 						const existingCache = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}');
 						existingCache[shortcode] = {
@@ -95,10 +96,10 @@ function Content({ shortcode: propShortcode }) {
 					}
 				} else {
 					if (response.status === 404) {
-						setError({code: 404, message: 'Oops! Paste not found or has been expired. Try creating a new one.'});
+						setError({ code: 404, message: 'Oops! Paste not found or has been expired. Try creating a new one.' });
 						return;
 					}
-					
+
 					setError({ code: response.status, message: "Paste service might be busy. Please try again" });
 				}
 			} catch (err) {
@@ -123,10 +124,10 @@ function Content({ shortcode: propShortcode }) {
 		<div className='paste-view-container'>
 
 			{loading && 
-                <div className='loader-container'>
-                    <span className='content-loader'></span>
-                    <h3>Fetching your paste, wait a moment...</h3>
-                </div>}
+				<div className='loader-container'>
+					<span className='content-loader'></span>
+					<h3>Fetching your paste, wait a moment...</h3>
+				</div>}
 
 			{!loading && error && (
 				<div className="error-card">
@@ -146,18 +147,20 @@ function Content({ shortcode: propShortcode }) {
 			)}
 
 			{!loading && !error && (
-                <>
-                <div className='paste-content'>
-                    {content}
-                </div>
-                <div className='paste-view-footer'>
-                <button className='new-paste-button' onClick={handleCreateNew}>
-					+ New Paste
-				</button>
-            </div>
-                </>
+				<>
+					<div className='paste-content'>
+						{content}
+					</div>
+					<div className='paste-view-footer'>
+						<Copy copyText={content} />
+
+						<button className='new-paste-button' onClick={handleCreateNew}>
+							+ New Paste
+						</button>
+					</div>
+				</>
 			)}
-            
+
 		</div>
 	);
 }

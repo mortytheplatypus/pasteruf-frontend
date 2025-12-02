@@ -1,11 +1,16 @@
 .copy-btn {
-    font-size: 14px;
+    font-size: 16px;
     font-family: inherit;
     font-weight: bold;
     color: black;
+    padding: 6px 6px;
+    background-color: transparent;
+    border: 1px transparent solid;
+    border-radius: 6px;
 }
 
 .copy-btn:hover {
     cursor: pointer;
-    background-color: rgb(224, 252, 233);
+    background-color: #e0e2e8;
+    border: 1px dashed #1c202d;
 }
