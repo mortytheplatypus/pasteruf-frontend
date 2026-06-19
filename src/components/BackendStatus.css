@@ -1,0 +1,12 @@
+.backend-status {
+	width: 100%;
+	padding: 10px 14px;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 600;
+	color: #7a4a00;
+	background: linear-gradient(180deg, rgba(255, 248, 230, 0.98), rgba(255, 243, 210, 0.92));
+	border: 1px solid #f5d08a;
+	border-radius: 8px;
+}
