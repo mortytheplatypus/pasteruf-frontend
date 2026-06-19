@@ -10,8 +10,10 @@ function App() {
   const shortcode = pathname.startsWith('/') && pathname.length === SHORTCODE_LENGTH ? pathname.slice(1) : null;
   return (
     <div className="App">
-      <h1>Pasteruf</h1>
-      <BackendStatus />
+      <header className="app-header">
+        <h1>Pasteruf</h1>
+        <BackendStatus />
+      </header>
       {shortcode ? <Content shortcode={shortcode} /> : <PasteForm />}
     </div>
   );
