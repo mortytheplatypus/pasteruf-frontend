@@ -21,6 +21,42 @@ const  UNIT_MULTIPLIER = {
   days: 60 * 24
 };
 
+function LinkIcon() {
+  return (
+    <svg className="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg className="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg className="form-icon form-icon--btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg className="dismiss-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
 function PasteForm() {
   const [text, setText] = useState('');
   const [isUrl, setIsUrl] = useState(false);
@@ -28,7 +64,7 @@ function PasteForm() {
   const [loading, setLoading] = useState(false);
   const [expirationValue, setExpirationValue] = useState(DEFAULT_EXPIRATION_MINUTES);
   const [expirationUnit, setExpirationUnit] = useState(MINUTES);
-  const [errors, setErrors] = useState({ content: '', expiration: '' });
+  const [errors, setErrors] = useState({ expiration: '' });
 
   
 
@@ -61,15 +97,53 @@ function PasteForm() {
   };
 
   const handleExpirationChange = (e) => {
-    const val = e.target.value;
-    setExpirationValue(val === '' ? '' : Number(val));
-    setErrors((prev) => ({ ...prev, expiration: validateExpiration(val, expirationUnit) }));
+    const raw = e.target.value;
+    if (raw === '') {
+      setExpirationValue('');
+      setErrors((prev) => ({ ...prev, expiration: 'Expiration is required' }));
+      return;
+    }
+
+    let num = Number(raw);
+    let clampWarning = '';
+
+    if (expirationUnit === DAYS && num > MAX_EXPIRATION_DAYS) {
+      num = MAX_EXPIRATION_DAYS;
+      clampWarning = `Max expiration is ${MAX_EXPIRATION_DAYS} days`;
+    }
+
+    setExpirationValue(num);
+    setErrors((prev) => ({
+      ...prev,
+      expiration: clampWarning || validateExpiration(num, expirationUnit),
+    }));
   };
 
   const handleUnitChange = (e) => {
     const unit = e.target.value;
+    let num = expirationValue;
+    let clampWarning = '';
+
+    if (unit === DAYS && Number(num) > MAX_EXPIRATION_DAYS) {
+      num = MAX_EXPIRATION_DAYS;
+      clampWarning = `Max expiration is ${MAX_EXPIRATION_DAYS} days`;
+    }
+
     setExpirationUnit(unit);
-    setErrors((prev) => ({ ...prev, expiration: validateExpiration(expirationValue, unit) }));
+    if (num !== expirationValue) setExpirationValue(num);
+    setErrors((prev) => ({
+      ...prev,
+      expiration: clampWarning || validateExpiration(num, unit),
+    }));
+  };
+
+  const handleNewPaste = () => {
+    setText('');
+    setIsUrl(false);
+    setExpirationValue(DEFAULT_EXPIRATION_MINUTES);
+    setExpirationUnit(MINUTES);
+    setErrors({ expiration: '' });
+    setBanner({ type: '', shortcode: '', message: '' });
   };
 
   const handleSubmit = async (e) => {
@@ -77,7 +151,7 @@ function PasteForm() {
     const contentError = validateContentLength(text);
     const expirationError = validateExpiration(expirationValue, expirationUnit);
 
-    setErrors({ content: contentError, expiration: expirationError });
+    setErrors({ expiration: expirationError });
 
     if (contentError || expirationError) return;
 
@@ -98,13 +172,7 @@ function PasteForm() {
 
       if (shortcode) {
         setBanner({ type: 'success', shortcode, message: '' });
-
-        // Reset form to defaults on success
-        setText('');
-        setIsUrl(false);
-        setExpirationValue(DEFAULT_EXPIRATION_MINUTES);
-        setExpirationUnit(MINUTES);
-        setErrors({ content: '', expiration: '' });
+        setErrors({ expiration: '' });
       } else {
         setBanner({ type: 'error', shortcode: '', message: 'Service currently unavailable' });
       }
@@ -118,62 +186,70 @@ function PasteForm() {
 
   const unitMax = Math.floor(MAX_EXPIRATION_MINUTES / (UNIT_MULTIPLIER[expirationUnit] || 1));
 
-  const checkSubmitDisabled = validateExpiration(expirationValue, expirationUnit) !== '' || validateContentLength(text) !== '';
+  const contentError = validateContentLength(text);
+  const checkSubmitDisabled = validateExpiration(expirationValue, expirationUnit) !== '' || contentError !== '';
 
   return (
     <form className="paste-form" onSubmit={handleSubmit}>
-      <label>
+      <label className="paste-box-label">
         <textarea
           className="paste-box"
           value={text}
-          onChange={(e) => {
-            const v = e.target.value;
-            setText(v);
-            setErrors((prev) => ({ ...prev, content: validateContentLength(v) }));
-          }}
+          onChange={(e) => setText(e.target.value)}
           placeholder="Paste your text or URL here..."
           rows={10}
           disabled={loading}
         />
       </label>
 
-      <label className="url-checkbox">
-        <input
-          type="checkbox"
-          checked={isUrl}
-          onChange={(e) => setIsUrl(e.target.checked)}
-          disabled={loading}
-        />
-        Is URL?
-      </label>
+      <div className="form-toolbar">
+        <div className="form-options">
+          <label className="url-checkbox">
+            <input
+              type="checkbox"
+              checked={isUrl}
+              onChange={(e) => setIsUrl(e.target.checked)}
+              disabled={loading}
+            />
+            <LinkIcon />
+            <span>Is URL?</span>
+          </label>
 
-      <label className="expiration-input">
-        <span className="expiration-label">Expiration: </span>
-        <input
-          className="expiration-number"
-          type="number"
-          min={1}
-          max={unitMax}
-          value={expirationValue}
-          onChange={handleExpirationChange}
-          disabled={loading}
-        />
+          <label className="expiration-input">
+            <ClockIcon />
+            <span className="expiration-label">Expires in</span>
+            <input
+              className="expiration-number"
+              type="number"
+              min={1}
+              max={unitMax}
+              value={expirationValue}
+              onChange={handleExpirationChange}
+              disabled={loading}
+            />
+            <select disabled={loading} className="expiration-unit" value={expirationUnit} onChange={handleUnitChange}>
+              <option value={MINUTES}>Minutes</option>
+              <option value={HOURS}>Hours</option>
+              <option value={DAYS}>Days</option>
+            </select>
+          </label>
+        </div>
 
-        <select disabled={loading} className="expiration-unit" value={expirationUnit} onChange={handleUnitChange}>
-          <option value={MINUTES}>Minutes</option>
-          <option value={HOURS}>Hours</option>
-          <option value={DAYS}>Days</option>
-        </select>
-      </label>
+        <div className="submit-btn-wrapper">
+          {contentError && (
+            <span className="submit-btn-tooltip" role="tooltip">{contentError}</span>
+          )}
+          <button disabled={checkSubmitDisabled || loading} type="submit" className="submit-btn">
+            <SendIcon />
+            <span>{loading ? 'Submitting…' : 'Submit'}</span>
+          </button>
+        </div>
+      </div>
 
-      <button disabled={checkSubmitDisabled || loading} type="submit" className="submit-btn">Submit</button>
-
-      {errors.content && <div className="error-message">{errors.content}</div>}
-
-      {errors.expiration && <div className="error-message">{errors.expiration}</div>}
-
-      {loading && (
-        <div className="loader">Submitting…</div>
+      {errors.expiration && (
+        <div className="error-messages">
+          <div className="error-message">{errors.expiration}</div>
+        </div>
       )}
 
       {banner.type === 'success' && (
@@ -181,12 +257,25 @@ function PasteForm() {
           <div className="card-body">
             <h3>Success!</h3>
             {banner.shortcode && (
-              <p>Shortlink: <a href={`${window.location.origin}/${banner.shortcode}`} target="_blank" rel="noreferrer">{`${window.location.origin}/${banner.shortcode}`}</a></p>
+              <p className="shortlink-row">
+                <span className="shortlink-label">Shortlink</span>
+                <a
+                  className="shortlink-url"
+                  href={`${window.location.origin}/${banner.shortcode}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {`${window.location.origin}/${banner.shortcode}`}
+                </a>
+              </p>
             )}
           </div>
           <div className="card-actions">
             <Copy copyText={`${window.location.origin}/${banner.shortcode}`} />
-            <button type="button" className="button-dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <button type="button" className="new-paste-button" onClick={handleNewPaste}>+ New Paste</button>
+            <button type="button" className="button-dismiss" aria-label="Dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>
+              <CloseIcon />
+            </button>
           </div>
         </div>
       )}
@@ -198,7 +287,9 @@ function PasteForm() {
             <p>{banner.message || 'Please try again.'}</p>
           </div>
           <div className="card-actions">
-            <button type="button" className="button-dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>Dismiss</button>
+            <button type="button" className="button-dismiss" aria-label="Dismiss" onClick={() => setBanner({ type: '', shortcode: '', message: '' })}>
+              <CloseIcon />
+            </button>
           </div>
         </div>
       )}
